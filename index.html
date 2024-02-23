@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+
+<body>
+    <button id="registerBtn">Register</button>
+    <button id="authenticateBtn">Authenticate</button>
+
+    <script>
+        const registerBtn = document.getElementById('registerBtn');
+        const authenticateBtn = document.getElementById('authenticateBtn');
+
+        // registerBtn.addEventListener('click', async () =>
+        // {
+        //     const publicKeyCredential = await navigator.credentials.create({
+        //         publicKey: {
+        //             challenge: new Uint8Array([/* server-generated challenge */]),
+        //             rp: {
+        //                 name: 'Example Corp'
+        //             },
+        //             user: {
+        //                 id: new Uint8Array([/* user identifier */]),
+        //                 name: 'john@example.com',
+        //                 displayName: 'John Doe'
+        //             },
+        //             pubKeyCredParams: [{
+        //                 type: 'public-key',
+        //                 alg: -7 // ECDSA with SHA-256
+        //             }]
+        //         }
+        //     });
+
+        //     const publicKeyCredentialJSON = JSON.stringify(publicKeyCredential);
+
+        //     localStorage.setItem('publicKeyCredential', publicKeyCredentialJSON);
+
+        // });
+        alert('Registration successful! Credential stored locally.');
+
+        authenticateBtn.addEventListener('click', async () =>
+        {
+            const publicKeyCredential = await navigator.credentials.get({
+                publicKey: {
+                    challenge: new Uint8Array([/* server-generated challenge */]),
+                    rpId: 'example.com'
+                }
+            });
+
+            const publicKeyCredentialJSON = localStorage.getItem('publicKeyCredential');
+
+            if (publicKeyCredentialJSON)
+            {
+                const publicKeyCredential = JSON.parse(publicKeyCredentialJSON);
+
+                alert('Authentication successful!');
+            } else
+            {
+                alert('No credential found. Please register first.');
+            }
+        });
+    </script>
+</body>
+
+</html>
