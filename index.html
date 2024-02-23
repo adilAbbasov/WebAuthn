@@ -4,65 +4,45 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+    <title>WebAuthn Biometric Authentication</title>
 </head>
 
 <body>
-    <button id="registerBtn">Register</button>
-    <button id="authenticateBtn">Authenticate</button>
+    <h1>WebAuthn Biometric Authentication Demo</h1>
+    <div id="status"></div>
 
     <script>
-        const registerBtn = document.getElementById('registerBtn');
-        const authenticateBtn = document.getElementById('authenticateBtn');
-
-        // registerBtn.addEventListener('click', async () =>
-        // {
-        //     const publicKeyCredential = await navigator.credentials.create({
-        //         publicKey: {
-        //             challenge: new Uint8Array([/* server-generated challenge */]),
-        //             rp: {
-        //                 name: 'Example Corp'
-        //             },
-        //             user: {
-        //                 id: new Uint8Array([/* user identifier */]),
-        //                 name: 'john@example.com',
-        //                 displayName: 'John Doe'
-        //             },
-        //             pubKeyCredParams: [{
-        //                 type: 'public-key',
-        //                 alg: -7 // ECDSA with SHA-256
-        //             }]
-        //         }
-        //     });
-
-        //     const publicKeyCredentialJSON = JSON.stringify(publicKeyCredential);
-
-        //     localStorage.setItem('publicKeyCredential', publicKeyCredentialJSON);
-
-        // });
-        alert('Registration successful! Credential stored locally.');
-
-        authenticateBtn.addEventListener('click', async () =>
+        async function authenticateWithBiometrics()
         {
-            const publicKeyCredential = await navigator.credentials.get({
-                publicKey: {
-                    challenge: new Uint8Array([/* server-generated challenge */]),
-                    rpId: 'example.com'
+            try
+            {
+                const credential = await navigator.credentials.create({
+                    publicKey: {
+                        challenge: Uint8Array.from("some-random-bytes"),
+                        rp: { name: "Example Corp" },
+                        user: { id: Uint8Array.from("some-user-id"), name: "user@example.com", displayName: "User" },
+                        pubKeyCredParams: [{ type: "public-key", alg: -7 }],
+                        timeout: 60000
+                    }
+                });
+
+                if (credential)
+                {
+                    document.getElementById("status").innerHTML = "Biometric authentication successful!";
+                    console.log("Biometric authentication successful!", credential);
+                } else
+                {
+                    document.getElementById("status").innerHTML = "Biometric authentication failed!";
+                    console.error("Biometric authentication failed!");
                 }
-            });
-
-            const publicKeyCredentialJSON = localStorage.getItem('publicKeyCredential');
-
-            if (publicKeyCredentialJSON)
+            } catch (error)
             {
-                const publicKeyCredential = JSON.parse(publicKeyCredentialJSON);
-
-                alert('Authentication successful!');
-            } else
-            {
-                alert('No credential found. Please register first.');
+                console.error("Error during biometric authentication:", error);
+                document.getElementById("status").innerHTML = "Error during biometric authentication: " + error;
             }
-        });
+        }
+
+        authenticateWithBiometrics();
     </script>
 </body>
 
